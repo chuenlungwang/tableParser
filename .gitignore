@@ -46,3 +46,6 @@ target/
 .venv
 venv/
 ENV/
+
+# vscode project files
+.vscode
