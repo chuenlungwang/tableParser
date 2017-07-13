@@ -1,0 +1,11 @@
+Table Parser Repository
+=======================
+
+This project is created for parse config in Excel into several language, such
+as Lua, TypeScript, json.
+
+Each configuration file has its own meta file -- an xml file, which describe
+source file name, data sheet, data column name and field name, field type.
+
+Config data supports `int32`, `int64`, `string` and `array` types. The element type of
+`array` could be any type support.

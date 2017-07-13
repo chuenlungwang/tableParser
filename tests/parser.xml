@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<table>
+	<file source="UserCfgs.xlsx">
+		<language>
+			<name>lua</name>
+			<name>ts</name>
+			<name>json</name>
+		</language>
+		<sheet name="UserCommon" dest="UserCommon">
+			<key>uid</key>
+			<field  column="id"         name="uid"        type="int32"   />
+			<field  column="age"        name="age"        type="int32"   />
+			<field  column="name"       name="userName"   type="string"  />
+			<field  column="phones"     name="phones"     type="array"   element="int32"   />
+			<field  column="addresses"  name="addresses"  type="array"   element="string"  />
+		</sheet>
+	</file>
+</table>
