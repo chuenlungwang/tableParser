@@ -49,3 +49,6 @@ ENV/
 
 # vscode project files
 .vscode
+
+# macos .DS_Store
+.DS_Store
