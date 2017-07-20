@@ -8,8 +8,7 @@ sys.setdefaultencoding('utf8')
 
 from collections import namedtuple
 import xml.etree.ElementTree as ET
-import os.path
-import shutil
+import os
 import json
 import codecs
 
@@ -44,8 +43,7 @@ def process_file_element(fileE):
 def parse_xml_meta(xml_file):
     tree = ET.parse(xml_file)
     root = tree.getroot()
-    directory = os.path.abspath(os.path.dirname(xml_file))
-    return directory, [process_file_element(x) for x in root.findall('file')]
+    return [process_file_element(x) for x in root.findall('file')]
 
 def refine(type, element, value):
     value = value.strip()
@@ -92,16 +90,13 @@ def read_xlsx(file_path, sheet_metaes):
 
     return xlsx_content
 
+def parse(meta_file, src_dir, dest_dir) :
+    files = parse_xml_meta(meta_file)
 
-def main():
-    directory, files = parse_xml_meta('../tests/parser.xml')
-
-    dest_dir = os.path.join(directory, "build")
-    if os.path.exists(dest_dir) :
-        shutil.rmtree(dest_dir)
-    os.mkdir(dest_dir, 0755)
+    if not os.path.exists(dest_dir) :
+        os.mkdir(dest_dir, 0755)
     for file in files:
-        file_path = os.path.join(directory, file.name)
+        file_path = os.path.join(src_dir, file.name)
         if os.path.isfile(file_path) :
             xlsx_content = read_xlsx(file_path, file.sheets)
             for dest_name, config_content in xlsx_content.iteritems() :
@@ -111,8 +106,5 @@ def main():
                                           sort_keys    = True,
                                           ensure_ascii = False,
                                           indent       = 4,
-                                          separators   = (',', ": "))
+                                          separators   = (',', ":"))
                     f.write(json_str)
-
-if __name__ == "__main__":
-    main()
