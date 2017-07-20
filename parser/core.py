@@ -89,7 +89,6 @@ def read_xlsx(file_path, sheet_metaes):
                 sheet_content.append(row_value)
 
         xlsx_content[sheet_meta.dest] = sheet_content
-        # print(json.dumps(sheet_content, sort_keys=True))
 
     return xlsx_content
 
@@ -110,7 +109,9 @@ def main():
                 with codecs.open(dest_path, 'w', 'utf-8') as f :
                     json_str = json.dumps(config_content,
                                           sort_keys    = True,
-                                          ensure_ascii = False)
+                                          ensure_ascii = False,
+                                          indent       = 4,
+                                          separators   = (',', ": "))
                     f.write(json_str)
 
 if __name__ == "__main__":
