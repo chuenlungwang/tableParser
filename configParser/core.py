@@ -6,7 +6,7 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
-from collections import namedtuple
+from collections import namedtuple, OrderedDict
 import xml.etree.ElementTree as ET
 import os
 import json
@@ -54,8 +54,12 @@ def refine(type, element, value):
         return int(float(value))
     elif type == "int64":
         return long(float(value))
+    elif type == "float":
+        return float(value)
     elif type == "string":
-        return value
+        return str(value)
+    elif type == "bool":
+        return bool(value)
     elif type == "array":
         return [refine(element, None, str(x)) for x in eval(value)]
 
@@ -70,7 +74,7 @@ def read_xlsx(file_path, sheet_metaes):
             if colname in sheet_meta.fields:
                 col_index[colname] = x
 
-        sheet_content = {} if sheet_meta.key else []
+        sheet_content = OrderedDict() if sheet_meta.key else []
         for x in xrange(1, sheet.nrows):
             key_value = None
             row_value = {}
@@ -81,14 +85,29 @@ def read_xlsx(file_path, sheet_metaes):
                 if field.name == sheet_meta.key :
                     assert field.type != 'array'
                     key_value = field_value
-            if type(sheet_content) == dict :
-                sheet_content[key_value] = row_value
-            else:
+            if type(sheet_content) == list:
                 sheet_content.append(row_value)
+            else:
+                sheet_content[key_value] = row_value
 
         xlsx_content[sheet_meta.dest] = sheet_content
 
     return xlsx_content
+
+def simple_format_json(content):
+    def json_dumps(json_content):
+        return json.dumps(json_content,
+                          sort_keys    = True,
+                          ensure_ascii = False,
+                          separators   = (',', ':'))
+
+    if isinstance(content, list):
+        lines = [json_dumps(x) for x in content]
+        return '[\n{0}\n]'.format(',\n'.join(lines))
+    else:
+        lines = ["{0}:{1}".format(json_dumps(str(key)), json_dumps(value))
+                 for key, value in content.iteritems()]
+        return '{{\n{0}\n}}'.format(',\n'.join(lines))
 
 def parse(meta_file, src_dir, dest_dir) :
     files = parse_xml_meta(meta_file)
@@ -102,9 +121,4 @@ def parse(meta_file, src_dir, dest_dir) :
             for dest_name, config_content in xlsx_content.iteritems() :
                 dest_path = os.path.join(dest_dir, dest_name + ".json")
                 with codecs.open(dest_path, 'w', 'utf-8') as f :
-                    json_str = json.dumps(config_content,
-                                          sort_keys    = True,
-                                          ensure_ascii = False,
-                                          indent       = 4,
-                                          separators   = (',', ":"))
-                    f.write(json_str)
+                    f.write(simple_format_json(config_content))
