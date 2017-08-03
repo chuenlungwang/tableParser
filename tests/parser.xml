@@ -3,7 +3,6 @@
 	<file name="UserCfgs.xlsx">
 		<language>
 			<name>lua</name>
-			<name>ts</name>
 			<name>json</name>
 		</language>
 		<sheet name="UserCommon" dest="UserCommon" key="uid">
