@@ -66,7 +66,7 @@ def refine(type, element, value):
     elif type == "string":
         return str(value)
     elif type == "bool":
-        return bool(value)
+        return True if value.lower() == "true" else False
     elif type == "array":
         return [refine(element, None, str(x)) for x in eval(value)]
 

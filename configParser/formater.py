@@ -42,6 +42,8 @@ def putScalar(v):
     tv = type(v)
     if tv == str:
         return escape(v)
+    elif tv == bool:
+        return "true" if v else "false"
     else:
         return str(v)
 

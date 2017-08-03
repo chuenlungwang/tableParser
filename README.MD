@@ -8,4 +8,4 @@ Each configuration file has its own meta file -- an xml file, which describe
 source file name, data sheet, data column name and field name, field type.
 
 Config data supports `int32`, `int64`, `float`, `bool`, `string` and `array` types. The element type of
-`array` could be any type support.
+`array` could be any scalar type support.

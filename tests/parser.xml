@@ -8,6 +8,7 @@
 		<sheet name="UserCommon" dest="UserCommon" key="uid">
 			<field  column="id"         name="uid"        type="int32"   />
 			<field  column="age"        name="age"        type="int32"   />
+			<field  column="online"     name="online"     type="bool"    />
 			<field  column="name"       name="userName"   type="string"  />
 			<field  column="phones"     name="phones"     type="array"   element="int32"   />
 			<field  column="addresses"  name="addresses"  type="array"   element="string"  />
