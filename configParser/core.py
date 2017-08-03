@@ -2,13 +2,13 @@
 from __future__ import print_function
 
 import codecs
-import json
+
 import os
 import sys
 import xml.etree.ElementTree as ET
 from collections import OrderedDict, namedtuple
 
-from .formater import lua_dumps
+from .formater import simple_format_lua, simple_format_json
 
 import xlrd
 
@@ -88,8 +88,7 @@ def read_xlsx(file_path, sheet_metaes):
             row_value = {}
             for colname, field in sheet_meta.fields.iteritems():
                 col = col_index[colname]
-                field_value = refine(
-                    field.type, field.element, str(sheet.cell(x, col).value))
+                field_value = refine(field.type, field.element, str(sheet.cell(x, col).value))
                 row_value[field.name] = field_value
                 if field.name == sheet_meta.key:
                     assert field.type != 'array'
@@ -104,37 +103,10 @@ def read_xlsx(file_path, sheet_metaes):
     return xlsx_content
 
 
-def simple_format_json(content):
-    def json_dumps(json_content):
-        return json.dumps(json_content,
-                          sort_keys=True,
-                          ensure_ascii=False,
-                          separators=(',', ':'))
-
-    if isinstance(content, list):
-        lines = [json_dumps(x) for x in content]
-        return '[\n{0}\n]'.format(',\n'.join(lines))
-    else:
-        lines = ["{0}:{1}".format(json_dumps(str(key)), json_dumps(value))
-                 for key, value in content.iteritems()]
-        return '{{\n{0}\n}}'.format(',\n'.join(lines))
-
-
 def write_json(dest_dir, dest_name, config_content):
     dest_path = os.path.join(dest_dir, dest_name + ".json")
     with codecs.open(dest_path, 'w', 'utf-8') as f:
         f.write(simple_format_json(config_content))
-
-
-def simple_format_lua(content):
-    template = "local M = {{\n\t{0}\n}}\nreturn M"
-    if isinstance(content, list):
-        lines = [lua_dumps(x) for x in content]
-        return template.format(",\n\t".join(lines))
-    else:
-        lines = ["[{0}] = {1}".format(lua_dumps(key), lua_dumps(value))
-                for key, value in content.iteritems()]
-        return template.format(",\n".join(lines))
 
 
 def write_lua(dest_dir, dest_name, config_content):
