@@ -47,5 +47,5 @@ def putScalar(v):
 
 
 def putList(v):
-    items = [putScalar(x) for x in v]
+    items = [putValue(x) for x in v]
     return "{{{0}}}".format(",".join(items))
