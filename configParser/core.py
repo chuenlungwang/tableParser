@@ -53,6 +53,7 @@ def parse_xml_meta(xml_file):
 
 
 def refine(type, element, value):
+    value = value.replace("\xc2\xa0", " ")
     value = value.strip()
     if len(value) == 0:
         return None
@@ -88,7 +89,11 @@ def read_xlsx(file_path, sheet_metaes):
             row_value = {}
             for colname, field in sheet_meta.fields.iteritems():
                 col = col_index[colname]
-                field_value = refine(field.type, field.element, str(sheet.cell(x, col).value))
+                field_value = refine(
+                    field.type,
+                    field.element,
+                    str(sheet.cell(x, col).value)
+                )
                 row_value[field.name] = field_value
                 if field.name == sheet_meta.key:
                     assert field.type != 'array'
