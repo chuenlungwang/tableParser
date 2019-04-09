@@ -2,9 +2,7 @@
 
 import os
 
-from .context import parser
+from .context import tb
 
 if __name__ == '__main__' :
-    xml_file = './tests/parser.xml'
-    directory = os.path.dirname(xml_file)
-    parser.parse(xml_file, directory, "build")
+    tb.generate("./tests", "./build")
